@@ -1,8 +1,14 @@
 import React, {useState} from 'react';
 import {FaSignInAlt} from "react-icons/fa";
 import {toast} from "react-toastify";
+import {useDispatch, useSelector} from "react-redux";
+import {login} from '../features/auth/authSlice'
 
 const Login = () => {
+
+    const dispatch = useDispatch();
+
+    const {user, isLoading, isSuccess, isError, message} = useSelector(state => state.auth)
 
     const [formData, setFormData] = useState({
         email: '',
@@ -27,6 +33,12 @@ const Login = () => {
             toast.error('Please fill out all required fields');
             return;
         }
+
+        const userData = {
+            email,
+            password
+        }
+        dispatch(login(userData))
     }
 
     return (
