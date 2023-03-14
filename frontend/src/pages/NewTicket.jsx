@@ -2,10 +2,16 @@ import React from 'react';
 import {useState} from "react";
 import {useSelector, useDispatch} from "react-redux";
 import {FaTicketAlt} from "react-icons/fa";
+import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
+import {createTicket, reset} from '../features/tickets/ticketSlice';
+import Spinner from "../components/Spinner.jsx";
 
 const NewTicket = () => {
 
     const {user} = useSelector(state => state.auth);
+    const { ticket, isError, isSuccess, isLoading, message } = useSelector(state => state.ticket);
 
     const [formData, setFormData] = useState({
         product: '',
@@ -14,9 +20,23 @@ const NewTicket = () => {
 
     const {product, description} = formData;
 
-    const handleSubmit = (e) => {
-        e.preventDefualt();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        if(isError){
+            toast.error(message);
+        }
+        if(isSuccess){
+            dispatch(reset());
+            navigate('/');
+        }
+        dispatch(reset())
+    }, [isError, isSuccess, dispatch, navigate, message])
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch(createTicket(formData))
     }
 
     const handleChange = (e) => {
@@ -27,6 +47,8 @@ const NewTicket = () => {
             }
         })
     }
+
+    if(isLoading){return <Spinner />}
 
     return (
         <>
@@ -47,6 +69,7 @@ const NewTicket = () => {
                     <div className="form-group">
                         <label htmlFor="product">Product you're having trouble with:</label>
                         <select name="product" id="product" value={product} onChange={handleChange}>
+                            <option default value=''>Select A Product...</option>
                             <option value='Opus'>Opus</option>
                             <option value='Device Alive'>Device Alive</option>
                             <option value='OnTheClock'>OnTheClock</option>
