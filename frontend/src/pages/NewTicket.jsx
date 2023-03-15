@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {createTicket, reset} from '../features/tickets/ticketSlice';
 import Spinner from "../components/Spinner.jsx";
+import BackButton from "../components/BackButton.jsx";
 
 const NewTicket = () => {
 
@@ -52,6 +53,7 @@ const NewTicket = () => {
 
     return (
         <>
+            <BackButton url={'/'}></BackButton>
             <section className='heading'>
                 <h1><FaTicketAlt/><br/>Create New Ticket</h1>
                 <p>Submit a new support ticket using the form</p>
