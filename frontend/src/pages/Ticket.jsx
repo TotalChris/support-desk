@@ -2,15 +2,19 @@ import React from 'react';
 import {useSelector, useDispatch} from "react-redux";
 import {useEffect} from "react";
 import Spinner from "../components/Spinner.jsx";
-import {getTicket, closeTicket, reset} from '../features/tickets/ticketSlice'
+import {getTicket, closeTicket} from '../features/tickets/ticketSlice'
+import {getNotes, reset as notesReset} from "../features/notes/noteSlice.js";
 import BackButton from "../components/BackButton.jsx";
 import {useParams} from "react-router-dom";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
+import NoteItem from "../components/NoteItem.jsx";
 
 const Ticket = () => {
 
     const {ticket, isLoading, isSuccess, isError, message} = useSelector(state => state.tickets);
+    const {notes, isLoading: notesIsLoading} = useSelector(state => state.notes);
+
 
     const params = useParams();
     const dispatch = useDispatch();
@@ -21,6 +25,7 @@ const Ticket = () => {
             toast.error('Could not retrieve the ticket. It may have been closed or removed. Error: ' + message);
         }
         dispatch(getTicket(params.ticketId));
+        dispatch(getNotes(params.ticketId));
     }, [isError, message, params.ticketId, dispatch])
 
     const onTicketClose = () => {
@@ -28,7 +33,7 @@ const Ticket = () => {
         toast.success('Ticket successfully closed');
         navigate('/tickets');
     }
-    if(isLoading){
+    if(isLoading || notesIsLoading){
         return <Spinner />;
     }
 
@@ -51,6 +56,14 @@ const Ticket = () => {
                     <p>{ticket.description}</p>
                 </div>
             </header>
+            {notes && (
+                <>
+                    <h2>Notes</h2>
+                    {notes.map((note) => {
+                        return <NoteItem key={note._id} note={note} />
+                    })}
+                </>
+            )}
             {
                 ticket.status !== 'closed' && (
                     <button className="btn btn-block btn-danger" onClick={onTicketClose}>Close Ticket</button>
