@@ -23,7 +23,7 @@ const Tickets = () => {
     }, [dispatch])
 
     if(isLoading){
-        return Spinner;
+        return <Spinner />;
     }
 
     return (
