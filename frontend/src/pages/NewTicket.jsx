@@ -12,7 +12,7 @@ import BackButton from "../components/BackButton.jsx";
 const NewTicket = () => {
 
     const {user} = useSelector(state => state.auth);
-    const { ticket, isError, isSuccess, isLoading, message } = useSelector(state => state.ticket);
+    const { tickets, isError, isSuccess, isLoading, message } = useSelector(state => state.tickets);
 
     const [formData, setFormData] = useState({
         product: '',

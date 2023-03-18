@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"react-devtools\"",
-    "dev-public": "concurrently \"vite --host\" \"react-devtools\"",
+    "dev": "vite",
+    "dev-public": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },
